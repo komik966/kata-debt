@@ -2,6 +2,7 @@ apply plugin: 'java'
 apply plugin: 'jacoco'
 
 dependencies {
+    compile group: 'com.google.inject', name: 'guice', version: '4.2.0'
     testCompile 'io.cucumber:cucumber-java8:2.4.0'
     testCompile 'io.cucumber:cucumber-junit:2.4.0'
     testCompile group: 'org.assertj', name: 'assertj-core', version: '3.9.1'
