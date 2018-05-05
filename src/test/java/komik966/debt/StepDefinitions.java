@@ -1,7 +1,6 @@
 package komik966.debt;
 
 import com.google.inject.Guice;
-import com.google.inject.Injector;
 import cucumber.api.java8.En;
 import komik966.debt.guice.DebtModule;
 
@@ -13,8 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class StepDefinitions implements En {
 
     public StepDefinitions() {
-        Injector injector = Guice.createInjector(new DebtModule());
-        PersonFactory personFactory = injector.getInstance(PersonFactory.class);
+        PersonFactory personFactory = Guice.createInjector(new DebtModule()).getInstance(PersonFactory.class);
         Map<String, Person> people = new HashMap<>();
 
         Given("^person \"([^\"]*)\" and person \"([^\"]*)\" are square$", (String firstPerson, String secondPerson) -> {

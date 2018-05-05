@@ -4,17 +4,37 @@ import com.google.inject.Singleton;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 @Singleton
 class DebtRepository {
-    final private Map<Person, Set<Person>> borrowersGraph = new HashMap<>();
+    final private Map<Person, Map<Person, Integer>> borrowersGraph = new HashMap<>();
 
-    void registerDebt(Person borrower, Person lender, Integer moneyAmount) {
-
+    void registerDebt(Person borrower, Person lender, Integer amountToBorrow) {
+        borrowersGraph.computeIfPresent(
+                borrower,
+                (borrowerKey, lenderToBorrowedAmount) -> {
+                    lenderToBorrowedAmount.computeIfPresent(
+                            lender,
+                            (lenderKey, borrowedAmount) -> borrowedAmount + amountToBorrow
+                    );
+                    lenderToBorrowedAmount.putIfAbsent(lender, amountToBorrow);
+                    return lenderToBorrowedAmount;
+                }
+        );
+        borrowersGraph.computeIfAbsent(
+                borrower,
+                borrowerKey -> {
+                    Map<Person, Integer> lenderToBorrowedAmount = new HashMap<>();
+                    lenderToBorrowedAmount.put(lender, amountToBorrow);
+                    return lenderToBorrowedAmount;
+                }
+        );
     }
 
     Integer fetchDebt(Person borrower, Person lender) {
-        return 0;
+        if (!borrowersGraph.containsKey(borrower) || !borrowersGraph.get(borrower).containsKey(lender)) {
+            return 0;
+        }
+        return borrowersGraph.get(borrower).get(lender);
     }
 }
