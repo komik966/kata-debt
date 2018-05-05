@@ -30,6 +30,18 @@ public class DebtRepositoryTest {
     }
 
     @Test
+    public void registerDebtBorrowerTwiceDifferentLenders() {
+        Person firstLender = personFactory.create("A");
+        Person secondLender = personFactory.create("B");
+        Person borrower = personFactory.create("C");
+        debtRepository.registerDebt(borrower, firstLender, 10);
+        debtRepository.registerDebt(borrower, secondLender, 10);
+
+        assertThat(debtRepository.fetchDebt(borrower, firstLender)).isEqualTo(10);
+        assertThat(debtRepository.fetchDebt(borrower, secondLender)).isEqualTo(10);
+    }
+
+    @Test
     public void fetchDebtNonRegisteredBorrower() {
         Person lender = personFactory.create("A");
         Person borrower = personFactory.create("B");
