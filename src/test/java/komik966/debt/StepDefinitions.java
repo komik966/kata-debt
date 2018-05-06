@@ -28,5 +28,16 @@ public class StepDefinitions implements En {
         Then("^person \"([^\"]*)\" owes person \"([^\"]*)\" \\$\"([^\"]*)\"$", (String borrower, String lender, Integer moneyAmount) -> {
             assertThat(people.get(borrower).getDebt(people.get(lender))).isEqualTo(moneyAmount);
         });
+        Given("^person \"([^\"]*)\" borrowed \\$\"([^\"]*)\" from person \"([^\"]*)\"$", (String borrower, Integer moneyAmount, String lender) -> {
+            people.put(borrower, personFactory.create(borrower));
+            people.put(lender, personFactory.create(lender));
+
+            people.get(borrower).borrow(people.get(lender), moneyAmount);
+
+            assertThat(people.get(borrower).getDebt(people.get(lender))).isEqualTo(moneyAmount);
+        });
+        Then("^person \"([^\"]*)\" owes nothing person \"([^\"]*)\"$", (String owner, String lender) -> {
+            assertThat(people.get(owner).getDebt(people.get(lender))).isZero();
+        });
     }
 }
