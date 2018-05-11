@@ -7,11 +7,8 @@ import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.List;
-
 public class PathFinderTest {
-    private PathFinder pathFinder;
-    private BorrowersGraph borrowersGraph;
+    final private BorrowersGraph borrowersGraph = new BorrowersGraph();
     private Person pA;
     private Person pB;
     private Person pC;
@@ -21,7 +18,6 @@ public class PathFinderTest {
 
     @Before
     public void setUp() {
-        pathFinder = new PathFinder();
         PersonFactory personFactory = Guice.createInjector(new DebtModule()).getInstance(PersonFactory.class);
         /*
          * +---+   60  +---+   50 +---+   40  +---+
@@ -48,8 +44,23 @@ public class PathFinderTest {
     }
 
     @Test
-    public void findPath() throws PathFinder.BorrowerNotFound {
-        List<Person> foundPath = pathFinder.findPath(borrowersGraph, pA, pB);
-//        assertThat(foundPath).contains
+    public void findPath() {
+        PathFinder pathFinder = new PathFinder(borrowersGraph);
+        pathFinder.findPath(pA, pD);
+        assertThat(pathFinder.getFoundPath()).containsExactly(pA, pB, pC, pD);
+    }
+
+    @Test
+    public void findPathCyclic() {
+        PathFinder pathFinder = new PathFinder(borrowersGraph);
+        pathFinder.findPath(pA, pA);
+        assertThat(pathFinder.getFoundPath()).containsExactly(pA, pB, pC, pD, pA);
+    }
+
+    @Test
+    public void findPathNonPresent() {
+        PathFinder pathFinder = new PathFinder(borrowersGraph);
+        pathFinder.findPath(pF, pC);
+        assertThat(pathFinder.getFoundPath()).isEmpty();
     }
 }

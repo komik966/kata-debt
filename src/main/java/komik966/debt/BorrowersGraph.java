@@ -1,6 +1,8 @@
 package komik966.debt;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -18,6 +20,10 @@ class BorrowersGraph {
 
     Integer getEdgeValue(Person src, Person dest) {
         return storage.get(src).get(dest);
+    }
+
+    List<Person> getAdjacentVertices(Person src) {
+        return new ArrayList<>(storage.get(src).keySet());
     }
 
     void increaseEdgeValue(Person src, Person dest, Integer increaseBy) {

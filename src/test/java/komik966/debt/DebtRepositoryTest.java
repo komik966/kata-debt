@@ -11,12 +11,11 @@ public class DebtRepositoryTest {
 
     private DebtRepository debtRepository;
 
-    private PersonFactory personFactory;
+    private PersonFactory personFactory = Guice.createInjector(new DebtModule()).getInstance(PersonFactory.class);
 
     @Before
     public void setUp() {
         debtRepository = new DebtRepository();
-        personFactory = Guice.createInjector(new DebtModule()).getInstance(PersonFactory.class);
     }
 
     @Test

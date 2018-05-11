@@ -1,33 +1,45 @@
 package komik966.debt;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 class PathFinder {
-    List<Person> findPath(
-            BorrowersGraph borrowersGraph,
-            Person src,
-            Person dest
-    ) throws BorrowerNotFound {
-        if (!borrowersGraph.containsKey(from)) {
-            throw new BorrowerNotFound();
-        }
+    private Set<Person> visited = new HashSet<>();
 
-        List<Person> path = new ArrayList<>();
-        path.add(from);
+    private List<Person> foundPath = new ArrayList<>();
 
-        borrowersGraph.get(from).keySet().forEach(lender -> {
-            try {
-                path.addAll(findPath(borrowersGraph, lender, to));
-            } catch (BorrowerNotFound borrowerNotFound) {
-            }
-        });
+    private BorrowersGraph borrowersGraph;
 
+    private int recursionLevel = 0;
 
-        return path;
+    PathFinder(BorrowersGraph borrowersGraph) {
+        this.borrowersGraph = borrowersGraph;
     }
 
-    class BorrowerNotFound extends Throwable {
+    boolean findPath(Person src, Person dest) {
+        if (recursionLevel > 0 && src == dest) {
+            return true;
+        }
+        visited.add(src);
+        recursionLevel++;
+        for (Person adjacentVertex : borrowersGraph.getAdjacentVertices(src)) {
+            if (
+                    (!visited.contains(adjacentVertex) && findPath(adjacentVertex, dest))
+                            || (adjacentVertex == dest)
+                    ) {
+                recursionLevel--;
+                foundPath.add(adjacentVertex);
+                if (recursionLevel == 0) {
+                    foundPath.add(src);
+                    Collections.reverse(foundPath);
+                }
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    List<Person> getFoundPath() {
+        return foundPath;
     }
 }
