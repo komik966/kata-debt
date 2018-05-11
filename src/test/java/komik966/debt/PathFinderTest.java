@@ -35,7 +35,7 @@ public class PathFinderTest {
         pD = personFactory.create("D");
         pE = personFactory.create("E");
         pF = personFactory.create("F");
-        borrowersGraph.increaseEdgeValue(pA, pB, 40);
+        borrowersGraph.increaseEdgeValue(pA, pB, 10);
         borrowersGraph.increaseEdgeValue(pB, pC, 20);
         borrowersGraph.increaseEdgeValue(pC, pD, 30);
         borrowersGraph.increaseEdgeValue(pD, pA, 40);
@@ -48,6 +48,7 @@ public class PathFinderTest {
         PathFinder pathFinder = new PathFinder(borrowersGraph);
         pathFinder.findPath(pA, pD);
         assertThat(pathFinder.getFoundPath()).containsExactly(pA, pB, pC, pD);
+        assertThat(pathFinder.minEdgeValueInFoundPath()).isEqualTo(10);
     }
 
     @Test
@@ -55,6 +56,7 @@ public class PathFinderTest {
         PathFinder pathFinder = new PathFinder(borrowersGraph);
         pathFinder.findPath(pA, pA);
         assertThat(pathFinder.getFoundPath()).containsExactly(pA, pB, pC, pD, pA);
+        assertThat(pathFinder.minEdgeValueInFoundPath()).isEqualTo(10);
     }
 
     @Test
@@ -62,5 +64,6 @@ public class PathFinderTest {
         PathFinder pathFinder = new PathFinder(borrowersGraph);
         pathFinder.findPath(pF, pC);
         assertThat(pathFinder.getFoundPath()).isEmpty();
+        assertThat(pathFinder.minEdgeValueInFoundPath()).isEqualTo(Integer.MAX_VALUE);
     }
 }

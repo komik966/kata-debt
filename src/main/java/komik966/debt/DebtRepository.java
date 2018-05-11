@@ -8,6 +8,14 @@ class DebtRepository {
 
     void registerDebt(Person borrower, Person lender, Integer amountToBorrow) {
         borrowersGraph.increaseEdgeValue(borrower, lender, amountToBorrow);
+        reduceCycle(borrower);
+    }
+
+    private void reduceCycle(Person borrower) {
+        PathFinder pathFinder = new PathFinder(borrowersGraph);
+        if (pathFinder.findPath(borrower, borrower)) {
+            pathFinder.decreaseEachEdgeValueInFoundPath(pathFinder.minEdgeValueInFoundPath());
+        }
     }
 
     Integer fetchDebt(Person borrower, Person lender) {

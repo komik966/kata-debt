@@ -31,6 +31,11 @@ class BorrowersGraph {
         storage.get(src).compute(dest, (key, edgeValue) -> edgeValue + increaseBy);
     }
 
+    void decreaseEdgeValue(Person src, Person dest, Integer decreaseBy) {
+        createEdgeIfAbsent(src, dest);
+        storage.get(src).compute(dest, (key, edgeValue) -> edgeValue - decreaseBy);
+    }
+
     private void createEdgeIfAbsent(Person src, Person dest) {
         createVertexIfAbsent(src);
         createVertexIfAbsent(dest);

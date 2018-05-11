@@ -42,4 +42,33 @@ class PathFinder {
     List<Person> getFoundPath() {
         return foundPath;
     }
+
+    Integer minEdgeValueInFoundPath() {
+        Integer min = Integer.MAX_VALUE;
+        if (foundPath.isEmpty()) {
+            return min;
+        }
+        ListIterator<Person> iterator = foundPath.listIterator();
+        for (Person next = iterator.next(); iterator.hasNext(); ) {
+            Person current = next;
+            next = iterator.next();
+            Integer edgeVal = borrowersGraph.getEdgeValue(current, next);
+            if (edgeVal < min) {
+                min = edgeVal;
+            }
+        }
+        return min;
+    }
+
+    void decreaseEachEdgeValueInFoundPath(Integer decreaseBy) {
+        if (foundPath.isEmpty()) {
+            return;
+        }
+        ListIterator<Person> iterator = foundPath.listIterator();
+        for (Person next = iterator.next(); iterator.hasNext(); ) {
+            Person current = next;
+            next = iterator.next();
+            borrowersGraph.decreaseEdgeValue(current, next, decreaseBy);
+        }
+    }
 }
