@@ -3,6 +3,8 @@ package komik966.debt;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
+import java.util.Map;
+
 public class Person {
 
     private final DebtRepository debtRepository;
@@ -21,6 +23,10 @@ public class Person {
 
     public Integer getDebt(Person lender) {
         return debtRepository.fetchDebt(this, lender);
+    }
+
+    public Map<Person, Integer> listDebts() {
+        return debtRepository.fetchDebts(this);
     }
 
     @Override

@@ -8,12 +8,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.entry;
 
 public class StepDefinitions implements En {
 
     public StepDefinitions() {
         PersonFactory personFactory = Guice.createInjector(new DebtModule()).getInstance(PersonFactory.class);
         Map<String, Person> people = new HashMap<>();
+        Map<Person, Integer> debtsList = new HashMap<>();
 
         Given("^person \"([^\"]*)\" and person \"([^\"]*)\" are square$", (String firstPerson, String secondPerson) -> {
             people.put(firstPerson, personFactory.create(firstPerson));
@@ -38,6 +40,20 @@ public class StepDefinitions implements En {
         });
         Then("^person \"([^\"]*)\" owes nothing person \"([^\"]*)\"$", (String owner, String lender) -> {
             assertThat(people.get(owner).getDebt(people.get(lender))).isZero();
+        });
+        Given("^a person has some debts$", () -> {
+            Person pA = personFactory.create("A");
+            Person pB = personFactory.create("B");
+            Person pC = personFactory.create("C");
+            pA.borrow(pB, 20);
+            pA.borrow(pC, 30);
+            people.put("A", pA);
+            people.put("B", pB);
+            people.put("C", pC);
+        });
+        When("^he lists his debts$", () -> debtsList.putAll(people.get("A").listDebts()));
+        Then("^his debts are on the list$", () -> {
+            assertThat(debtsList).containsExactly(entry(people.get("B"), 20), entry(people.get("C"), 30));
         });
     }
 }

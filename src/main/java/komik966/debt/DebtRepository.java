@@ -2,6 +2,9 @@ package komik966.debt;
 
 import com.google.inject.Singleton;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Singleton
 class DebtRepository {
     final private BorrowersGraph borrowersGraph = new BorrowersGraph();
@@ -23,5 +26,13 @@ class DebtRepository {
             return 0;
         }
         return borrowersGraph.getEdgeValue(borrower, lender);
+    }
+
+    Map<Person, Integer> fetchDebts(Person borrower) {
+        Map<Person, Integer> debtList = new HashMap<>();
+        borrowersGraph.getAdjacentVertices(borrower).forEach(lender -> {
+            debtList.put(lender, borrowersGraph.getEdgeValue(borrower, lender));
+        });
+        return debtList;
     }
 }

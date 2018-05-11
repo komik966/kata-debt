@@ -17,3 +17,8 @@ Feature: debt
     When person "C" borrows $"30" from "A"
     Then person "A" owes person "B" $"69"
     And person "B" owes person "C" $"11"
+
+  Scenario: list debts
+    Given a person has some debts
+    When he lists his debts
+    Then his debts are on the list
