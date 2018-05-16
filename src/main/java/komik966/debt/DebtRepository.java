@@ -4,6 +4,8 @@ import com.google.inject.Singleton;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Singleton
 class DebtRepository {
@@ -29,11 +31,9 @@ class DebtRepository {
     }
 
     Map<Person, Integer> fetchDebts(Person borrower) {
-        Map<Person, Integer> debtList = new HashMap<>();
-        borrowersGraph.getAdjacentVertices(borrower).forEach(lender -> {
-            debtList.put(lender, borrowersGraph.getEdgeValue(borrower, lender));
-        });
-        return debtList;
+        return borrowersGraph.getAdjacentVertices(borrower).stream().collect(
+                Collectors.toMap(Function.identity(), lender -> borrowersGraph.getEdgeValue(borrower, lender))
+        );
     }
 
     Map<Person, Integer> fetchRedeemOptions(Person borrower) {
