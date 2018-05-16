@@ -1,9 +1,8 @@
 package komik966.debt;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Example graph "A borrows $10 from B":
@@ -44,5 +43,19 @@ class BorrowersGraph {
 
     private void createVertexIfAbsent(Person person) {
         storage.computeIfAbsent(person, k -> new HashMap<>());
+    }
+
+    Set<List<Person>> findPaths(Person src) {
+        Set<List<Person>> foundPaths = new HashSet<>();
+        Map<Person, Boolean> visited = storage.keySet().stream().collect(Collectors.toMap(Function.identity(), person -> false));
+
+        Stack<Person> stack = new Stack<>();
+        stack.push(src);
+
+        while (!stack.empty()) {
+            src = stack.pop();
+        }
+
+        return foundPaths;
     }
 }

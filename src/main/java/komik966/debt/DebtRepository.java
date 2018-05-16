@@ -35,4 +35,8 @@ class DebtRepository {
         });
         return debtList;
     }
+
+    Map<Person, Integer> fetchRedeemOptions(Person borrower) {
+        return new HashMap<>();
+    }
 }

@@ -3,7 +3,6 @@ package komik966.debt;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class Person {
@@ -31,7 +30,7 @@ public class Person {
     }
 
     public Map<Person, Integer> listRedeemOptions() {
-        return new HashMap<>();
+        return debtRepository.fetchRedeemOptions(this);
     }
 
     @Override
