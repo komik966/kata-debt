@@ -4,8 +4,7 @@ import com.google.inject.Guice;
 import cucumber.api.java8.En;
 import komik966.debt.guice.DebtModule;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
@@ -16,6 +15,9 @@ public class StepDefinitions implements En {
         PersonFactory personFactory = Guice.createInjector(new DebtModule()).getInstance(PersonFactory.class);
         Map<String, Person> people = new HashMap<>();
         Map<Person, Integer> debtsList = new HashMap<>();
+        Map<Person, Integer> redeemOptions = new HashMap<>();
+        List<Person> listsRedeem = new ArrayList<>();
+        Iterator<Integer> borrowedAmountFixture = Arrays.asList(10, 20).listIterator();
 
         Given("^person \"([^\"]*)\" and person \"([^\"]*)\" are square$", (String firstPerson, String secondPerson) -> {
             people.put(firstPerson, personFactory.create(firstPerson));
@@ -54,6 +56,22 @@ public class StepDefinitions implements En {
         When("^he lists his debts$", () -> debtsList.putAll(people.get("A").listDebts()));
         Then("^his debts are on the list$", () -> {
             assertThat(debtsList).containsExactly(entry(people.get("B"), 20), entry(people.get("C"), 30));
+        });
+        Given("^person \"([^\"]*)\" owes person \"([^\"]*)\"$", (String borrower, String lender) -> {
+            people.put(borrower, personFactory.create(borrower));
+            people.put(lender, personFactory.create(lender));
+
+            people.get(borrower).borrow(people.get(lender), borrowedAmountFixture.next());
+        });
+        When("^person \"([^\"]*)\" lists his redeem options$", (String person) -> {
+            redeemOptions.putAll(people.get(person).listRedeemOptions());
+            listsRedeem.add(people.get(person));
+        });
+        Then("^he can give person \"([^\"]*)\" full amount$", (String lender) -> {
+            assertThat(redeemOptions.get(people.get(lender))).isEqualTo(listsRedeem.get(0).getDebt(people.get(lender)));
+        });
+        Then("he can give person \"([^\"]*)\" amount owed by person \"([^\"]*)\"$", (String nonAdjacentLender, String adjacentLender) -> {
+            assertThat(redeemOptions.get(people.get(nonAdjacentLender))).isEqualTo(people.get(adjacentLender).getDebt(people.get(nonAdjacentLender)));
         });
     }
 }
