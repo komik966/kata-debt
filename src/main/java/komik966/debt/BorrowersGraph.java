@@ -45,8 +45,7 @@ class BorrowersGraph {
         storage.computeIfAbsent(person, k -> new HashMap<>());
     }
 
-    Set<List<Person>> findPaths(Person src) {
-        Set<List<Person>> foundPaths = new HashSet<>();
+    void dfs(Person src, ActionOnEdgeTraverse actionOnEdgeTraverse) {
         Map<Person, Boolean> visited = storage.keySet().stream().collect(Collectors.toMap(Function.identity(), person -> false));
 
         Stack<Person> stack = new Stack<>();
@@ -54,8 +53,16 @@ class BorrowersGraph {
 
         while (!stack.empty()) {
             src = stack.pop();
-        }
 
-        return foundPaths;
+            if (!visited.get(src)) {
+                visited.put(src, true);
+            }
+
+            Person currentSrc = src;
+            this.getAdjacentVertices(src).stream().filter(person -> !visited.get(person)).forEach(dest -> {
+                stack.push(dest);
+                actionOnEdgeTraverse.execute(currentSrc, dest);
+            });
+        }
     }
 }

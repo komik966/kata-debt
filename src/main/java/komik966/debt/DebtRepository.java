@@ -37,6 +37,8 @@ class DebtRepository {
     }
 
     Map<Person, Integer> fetchRedeemOptions(Person borrower) {
-        return new HashMap<>();
+        Map<Person, Integer> result = new HashMap<>();
+        borrowersGraph.dfs(borrower, (Person src, Person dest) -> result.put(dest, borrowersGraph.getEdgeValue(src, dest)));
+        return result;
     }
 }
