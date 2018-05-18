@@ -16,6 +16,7 @@ public class StepDefinitions implements En {
         Map<String, Person> people = new HashMap<>();
         Map<Person, Integer> debtsList = new HashMap<>();
         Map<Person, Integer> redeemOptions = new HashMap<>();
+        Map<Person, Map<Person, Integer>> debtBuyingOptions = new HashMap<>();
         List<Person> listsRedeem = new ArrayList<>();
         Iterator<Integer> borrowedAmountFixture = Arrays.asList(10, 20).listIterator();
 
@@ -41,6 +42,9 @@ public class StepDefinitions implements En {
             assertThat(people.get(borrower).getDebt(people.get(lender))).isEqualTo(moneyAmount);
         });
         Then("^person \"([^\"]*)\" owes nothing person \"([^\"]*)\"$", (String owner, String lender) -> {
+            people.put(owner, personFactory.create(owner));
+            people.put(lender, personFactory.create(lender));
+
             assertThat(people.get(owner).getDebt(people.get(lender))).isZero();
         });
         Given("^a person has some debts$", () -> {
@@ -70,8 +74,17 @@ public class StepDefinitions implements En {
         Then("^he can give person \"([^\"]*)\" full amount$", (String lender) -> {
             assertThat(redeemOptions.get(people.get(lender))).isEqualTo(listsRedeem.get(0).getDebt(people.get(lender)));
         });
-        Then("he can give person \"([^\"]*)\" amount owed by person \"([^\"]*)\"$", (String nonAdjacentLender, String adjacentLender) -> {
+        Then("^he can give person \"([^\"]*)\" amount owed by person \"([^\"]*)\"$", (String nonAdjacentLender, String adjacentLender) -> {
             assertThat(redeemOptions.get(people.get(nonAdjacentLender))).isEqualTo(people.get(adjacentLender).getDebt(people.get(nonAdjacentLender)));
+        });
+        When("^person \"([^\"]*)\" sells the debt \"([^\"]*)\" to person \"([^\"]*)\" for \\$\"([^\"]*)\"$", (String lender, String borrower, String debtBuyer, Integer debtPrice) -> {
+            people.get(lender).sellDebt(people.get(borrower), people.get(debtBuyer), debtPrice);
+        });
+        When("^person \"([^\"]*)\" lists his debt buying options", (String debtBuyer) -> {
+            debtBuyingOptions.putAll(people.get(debtBuyer).listDebtBuyingOptions());
+        });
+        Then("^\"([^\"]*)\" is listed with \\$\"([^\"]*)\" due to \"([^\"]*)\"$", (String borrower, Integer debtValue, String lender) -> {
+            assertThat(debtBuyingOptions.get(people.get(borrower))).containsExactly(entry(people.get(lender), debtValue));
         });
     }
 }

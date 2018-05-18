@@ -25,6 +25,10 @@ class BorrowersGraph {
         return new ArrayList<>(storage.get(src).keySet());
     }
 
+    Set<Person> getAllEdges() {
+        return storage.keySet();
+    }
+
     void increaseEdgeValue(Person src, Person dest, Integer increaseBy) {
         createEdgeIfAbsent(src, dest);
         storage.get(src).compute(dest, (key, edgeValue) -> edgeValue + increaseBy);
