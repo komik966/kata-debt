@@ -43,6 +43,9 @@ class DebtRepository {
     }
 
     void sellDebt(Person lender, Person borrower, Person debtBuyer, Integer debtPrice) {
-
+        Integer debtValue = borrowersGraph.getEdgeValue(borrower, lender);
+        borrowersGraph.decreaseEdgeValue(borrower, lender, debtValue);
+        borrowersGraph.increaseEdgeValue(borrower, debtBuyer, debtValue);
+        borrowersGraph.increaseEdgeValue(debtBuyer, lender, debtPrice);
     }
 }
