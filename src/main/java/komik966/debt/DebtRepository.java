@@ -41,4 +41,8 @@ class DebtRepository {
         borrowersGraph.dfs(borrower, (Person src, Person dest) -> result.put(dest, borrowersGraph.getEdgeValue(src, dest)));
         return result;
     }
+
+    void sellDebt(Person lender, Person borrower, Person debtBuyer, Integer debtPrice) {
+
+    }
 }

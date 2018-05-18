@@ -30,13 +30,13 @@ Feature: debt
     Then he can give person "B" full amount
     And he can give person "C" amount owed by person "B"
 
-#  Scenario: Selling debt
-#    Given a person A owes person B 10
-#    And a person C owes person B nothing
-#    When person B sells the debt A to person C for 8
-#    Then person A owes person C 10
-#    And person C owes person B 8
-#    And person A owes nothing person B
+  Scenario: Selling debt
+    Given person "A" borrowed $"10" from person "B"
+    And person "C" owes nothing person "B"
+    When person "B" sells the debt "A" to person "C" for $"8"
+    Then person "A" owes person "C" $"10"
+    And person "C" owes person "B" $"8"
+    And person "A" owes nothing person "B"
 #
 #  Scenario: Listing debt buying options
 #    Given person A owes 5 to E

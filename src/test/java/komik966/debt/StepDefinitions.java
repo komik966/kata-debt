@@ -41,6 +41,9 @@ public class StepDefinitions implements En {
             assertThat(people.get(borrower).getDebt(people.get(lender))).isEqualTo(moneyAmount);
         });
         Then("^person \"([^\"]*)\" owes nothing person \"([^\"]*)\"$", (String owner, String lender) -> {
+            people.put(owner, personFactory.create(owner));
+            people.put(lender, personFactory.create(lender));
+
             assertThat(people.get(owner).getDebt(people.get(lender))).isZero();
         });
         Given("^a person has some debts$", () -> {
@@ -72,6 +75,9 @@ public class StepDefinitions implements En {
         });
         Then("he can give person \"([^\"]*)\" amount owed by person \"([^\"]*)\"$", (String nonAdjacentLender, String adjacentLender) -> {
             assertThat(redeemOptions.get(people.get(nonAdjacentLender))).isEqualTo(people.get(adjacentLender).getDebt(people.get(nonAdjacentLender)));
+        });
+        When("person \"([^\"]*)\" sells the debt \"([^\"]*)\" to person \"([^\"]*)\" for \\$\"([^\"]*)\"$", (String lender, String borrower, String debtBuyer, Integer debtPrice) -> {
+            people.get(lender).sellDebt(people.get(borrower), people.get(debtBuyer), debtPrice);
         });
     }
 }
