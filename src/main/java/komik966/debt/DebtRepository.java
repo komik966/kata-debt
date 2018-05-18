@@ -50,6 +50,19 @@ class DebtRepository {
     }
 
     Map<Person, Map<Person, Integer>> fetchDebtBuyingOptions(Person debtBuyer) {
-        return new HashMap<>();
+        return borrowersGraph.getAllEdges().stream().filter(person -> person != debtBuyer).collect(
+                Collectors.toMap(
+                        Function.identity(),
+                        borrower -> borrowersGraph.getAdjacentVertices(borrower).stream().collect(
+                                Collectors.toMap(
+                                        Function.identity(),
+                                        lender ->
+                                                borrowersGraph.edgeExists(debtBuyer, lender) ?
+                                                        borrowersGraph.getEdgeValue(borrower, lender) - borrowersGraph.getEdgeValue(debtBuyer, lender) :
+                                                        borrowersGraph.getEdgeValue(borrower, lender)
+                                )
+                        )
+                )
+        );
     }
 }
