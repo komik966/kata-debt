@@ -37,14 +37,14 @@ Feature: debt
     Then person "A" owes person "C" $"10"
     And person "C" owes person "B" $"8"
     And person "A" owes nothing person "B"
-#
-#  Scenario: Listing debt buying options
-#    Given person A owes 5 to E
-#    And person B owes 10 to C
-#    And person D owes 30 to E
-#    When person A lists his debt buying options
-#    Then B is listed with 10 due to C
-#    Then D is listed with 25 due to E
-#
-#  Proszę zauważyć, że D nie może przejąć całego długu od D, bo samo jest dłużne E.
+
+  Scenario: Listing debt buying options
+    Given person "A" borrowed $"5" from person "E"
+    And person "B" borrowed $"10" from person "C"
+    And person "D" borrowed $"30" from person "E"
+    When person "A" lists his debt buying options
+    Then "B" is listed with $"10" due to "C"
+    Then "D" is listed with $"25" due to "E"
+
+#  Proszę zauważyć, że A nie może przejąć całego długu od D, bo samo jest dłużne E.
 #  Może przejąć tylko różnicę między kwotami, czyli 30-5=25.

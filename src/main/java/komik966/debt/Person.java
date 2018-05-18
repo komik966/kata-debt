@@ -37,6 +37,10 @@ public class Person {
         debtRepository.sellDebt(this, borrower, debtBuyer, debtPrice);
     }
 
+    public Map<Person, Map<Person, Integer>> listDebtBuyingOptions() {
+        return debtRepository.fetchDebtBuyingOptions(this);
+    }
+
     @Override
     public int hashCode() {
         return name.hashCode();

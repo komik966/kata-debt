@@ -48,4 +48,8 @@ class DebtRepository {
         borrowersGraph.increaseEdgeValue(borrower, debtBuyer, debtValue);
         borrowersGraph.increaseEdgeValue(debtBuyer, lender, debtPrice);
     }
+
+    Map<Person, Map<Person, Integer>> fetchDebtBuyingOptions(Person debtBuyer) {
+        return new HashMap<>();
+    }
 }
