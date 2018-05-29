@@ -48,3 +48,15 @@ Feature: debt
 
 #  Proszę zauważyć, że A nie może przejąć całego długu od D, bo samo jest dłużne E.
 #  Może przejąć tylko różnicę między kwotami, czyli 30-5=25.
+
+#  Scenario: Starting interest mode
+#    Given person 'A' owes person 'B' $10
+#    When the total debt has never been lower than $10 in last 6 months
+#    Then this debt enters 'unfair' mode
+#    And this debt will increase by 1% every day until fully paid
+#
+#  Scenario: Interest mode reset
+#    Given person 'A' used to owe person 'B' in 'unfair' mode
+#    And this debt was fully paid
+#    When the person 'A' borrows money from person 'B' again
+#    Then the debt is not in the 'unfair' mode
